@@ -2,14 +2,14 @@
 
 function* xPosGenr() {
 
-  let index = 0;
+  var index = 0;
   while(true)
     yield index++;
 }
 
 function* yPosGenr() {
 
-  let index = 0;
+  var index = 0;
   while(true)
     yield index++;
 }
@@ -23,7 +23,7 @@ class Game {
 	}
 
 	init() {
-		// _Board.init(cells);
+		this._Board.init(this._Cells);
 		// _Renderer.init(_Board);
 		this._GameAction.set('printHelloWorld', function () {
 			return 'Hello World';
