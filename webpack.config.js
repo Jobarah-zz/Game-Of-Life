@@ -1,5 +1,5 @@
 var config = {
-   entry: './js/react_components/main.js',
+   entry: './dev/js/react_components/main.js',
     
    output: {
       path:'./',

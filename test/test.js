@@ -5,7 +5,8 @@ let Game = require('../dev/js/game_components/Game');
 let Main = require('../dev/js/game_components/Main');
 let Board = require('../dev/js/game_components/Board');
 let Renderer = require('../dev/js/game_components/Renderer');
- let Cell = require('../dev/js/game_components/Cell');
+let Cell = require('../dev/js/game_components/Cell');
+let Player = require('../dev/js/game_components/Player');
 
 describe('Game', function () {
 
@@ -47,9 +48,7 @@ describe('#cellsIterator()', function() {
   describe('#executeMain()', function() {
     it('Should run a function when function name passed as args', function() {
     	let main = new Main();
-    	main.init();
-    	var hw = main.getHelloWorld();
-    	console.log(hw);
+    	main.runGame();;
       assert.equal(true, true);
     });
   });

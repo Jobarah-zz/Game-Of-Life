@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Jobarah/Game-Of-Life#readme",
   "devDependencies": {
+    "colors": "^1.1.2",
     "mocha": "^3.1.2"
   },
   "dependencies": {

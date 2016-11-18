@@ -21,13 +21,19 @@ class Game {
 		this._Cells = Cells;
 		this._GameAction = new Map();
 	}
-
-	init() {
-		this._Board.init(this._Cells);
-		// _Renderer.init(_Board);
+	setGameCommands() {
 		this._GameAction.set('printHelloWorld', function () {
 			return 'Hello World';
 		});
+		this._GameAction.set('./clear', function () {
+			return 'Hello World';
+		});
+	}
+
+	init() {
+		this._Board.init(this._Cells);
+		this._Renderer.init(this._Board);
+		this.setGameCommands();
 	}
 
 	executeAction(action) {
@@ -35,7 +41,7 @@ class Game {
 	}
 
 	logic() {
-		// board.printSelf();
+		this._Renderer.printBoard();
 		// executeAction(player.getPlayerInput());
 	}
 

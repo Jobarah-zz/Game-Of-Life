@@ -4,43 +4,34 @@ import Square from './Square';
 export default class Board extends React.Component {
   constructor() {
     super();
-    console.log("hello");
   }
-  renderSquare(i) {
-    return <Square />;
-  }
-
   onSquareUpdate(square) {
-
-    console.log('heere');
     console.log(square);
   }
 
-  render() {
-
+  createRow(rowId, colCount) {
     const cellsJSX = [];
-    const rowJSX = [];
 
-    for (let i = 0; i <= 2; ++i) {
-      console.log(1);
-      cellsJSX.push(<Square key={ 'cell-' + i } onUpdate={ this.onSquareUpdate.bind(this) } />);
+    for (let i = 0; i < colCount; ++i) {
+      cellsJSX.push(<Square key={ `cell-${rowId}-${i}` } onUpdate={ this.onSquareUpdate.bind(this) } />);
     }
-
     return (
-      <div>
         <div className="board-row">
           { cellsJSX }
         </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+    );
+  }
+
+  render() {
+    let dimensions = this.props.grid_size;
+    const rowJSX = [];
+    for (var i = 0; i < dimensions; ++i) {
+      rowJSX.push(this.createRow(i, dimensions));
+    } 
+    console.log(rowJSX);
+    return (
+      <div>
+         {rowJSX}
       </div>
     );
   }
