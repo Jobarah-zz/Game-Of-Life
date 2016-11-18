@@ -46,7 +46,7 @@ describe('#cellsIterator()', function() {
   });
 
   describe('#executeMain()', function() {
-    it('Should run a function when function name passed as args', function() {
+    it('Should run the game', function() {
     	let main = new Main();
     	main.runGame();;
       assert.equal(true, true);

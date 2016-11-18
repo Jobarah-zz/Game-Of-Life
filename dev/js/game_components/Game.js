@@ -42,7 +42,7 @@ class Game {
 
 	logic() {
 		this._Renderer.printBoard();
-		// executeAction(player.getPlayerInput());
+		// this.executeAction(this.player.getPlayerInput());
 	}
 
 	cellsIterator(array) {

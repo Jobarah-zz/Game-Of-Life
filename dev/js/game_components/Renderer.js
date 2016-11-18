@@ -8,6 +8,10 @@ class Renderer {
 		this.setColors();
 	}
 
+	reset_console() {
+	  return process.stdout.write(`\x1Bc`);
+	}
+
 	setColors() {
 		color_Code.set(1, colors.cyan);
 		color_Code.set(2, colors.magenta);
@@ -42,6 +46,7 @@ class Renderer {
 	}
 
 	printBoard() {
+		this.reset_console();
  		for (var i = this.Board._Cells.length - 1; i >= 0; i--) {
  			let row = this.Board._Cells[i];
 			this.printRow(row);
