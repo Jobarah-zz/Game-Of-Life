@@ -9,7 +9,7 @@ class Renderer {
 	}
 
 	reset_console() {
-	  return process.stdout.write(`\x1Bc`);
+	   process.stdout.write(`\x1Bc`);
 	}
 
 	setColors() {
@@ -30,7 +30,7 @@ class Renderer {
 	}
 
 	printCell(cell) {
-		const _cell = '\u2022 ';
+		const _cell = `\u2022 `;
 		if (cell.isAlive) 
 			this.log(this.getRandomColor()(_cell));
 		else
@@ -39,7 +39,6 @@ class Renderer {
 	}
 
 	printRow(row) {
-		const cell = '\u2022 ';
  		for (var j = row.length - 1; j >= 0; j--) {
  			this.printCell(row[j]);
  		}

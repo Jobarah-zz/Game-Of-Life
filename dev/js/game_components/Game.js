@@ -26,7 +26,13 @@ class Game {
 			return 'Hello World';
 		});
 		this._GameAction.set('./clear', function () {
-			return 'Hello World';
+			//todo here
+		});
+		this._GameAction.set('./pause', function () {
+			//todo here
+		});
+		this._GameAction.set('./play', function () {
+			//todo here
 		});
 	}
 
