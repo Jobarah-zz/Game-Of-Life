@@ -35,6 +35,7 @@ class Renderer {
 			this.log(this.getRandomColor()(_cell));
 		else
 			this.log(colors.gray(_cell));
+		//this.log(colors.inverse(_cell)); => for activeCells
 	}
 
 	printRow(row) {

@@ -48,7 +48,7 @@ describe('#cellsIterator()', function() {
   describe('#executeMain()', function() {
     it('Should run the game', function() {
     	let main = new Main();
-    	main.runGame();;
+    	main.runGame();
       assert.equal(true, true);
     });
   });
