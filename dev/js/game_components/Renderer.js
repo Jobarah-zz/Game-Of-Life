@@ -33,6 +33,8 @@ class Renderer {
 		const _cell = `\u2022 `;
 		if (cell.isAlive) 
 			this.log(this.getRandomColor()(_cell));
+		else if (cell.isActive)
+			this.log(colors.inverse(_cell));
 		else
 			this.log(colors.gray(_cell));
 		//this.log(colors.inverse(_cell)); => for activeCells
