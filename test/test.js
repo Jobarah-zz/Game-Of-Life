@@ -6,7 +6,7 @@ let Main = require('../dev/js/game_components/Main');
 let Board = require('../dev/js/game_components/Board');
 let Renderer = require('../dev/js/game_components/Renderer');
 let Cell = require('../dev/js/game_components/Cell');
-let Player = require('../dev/js/game_components/Player');
+let CommandReader = require('../dev/js/game_components/CommandReader');
 
 describe('Game', function () {
 

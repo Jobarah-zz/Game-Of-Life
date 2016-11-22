@@ -15,11 +15,11 @@ function* yPosGenr() {
 }
 
 class Game {
-	constructor(Board, Renderer, Cells, Player) {
+	constructor(Board, Renderer, Cells, CommandReader) {
 		this._Board = Board;
 		this._Renderer = Renderer;
 		this._Cells = Cells;
-		this._Player = Player;
+		this._CommandReader = CommandReader;
 		this._GameAction = new Map();
 	}
 	setGameCommands() {
@@ -49,7 +49,7 @@ class Game {
 
 	logic() {
 		this._Renderer.printBoard();
-		//this._Player.getPlayerInput();
+		//this._CommandReader.getCommandReaderInput();
 	}
 
 	cellsIterator(array) {
