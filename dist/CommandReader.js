@@ -20,6 +20,8 @@ _Keys.set('\x1B[B', 'DOWN');
 _Keys.set('\x1B[C', 'RIGHT');
 _Keys.set('\x1B[D', 'LEFT');
 _Keys.set(' ', 'TOGGLE_LIFE');
+_Keys.set('p', 'TOGGLE_PLAY');
+_Keys.set('P', 'TOGGLE_PLAY');
 _Keys.set('\x03', 'EXIT');
 
 var CommandReader = function () {
@@ -31,7 +33,6 @@ var CommandReader = function () {
 		key: 'getKeyboardInput',
 		value: function getKeyboardInput(executeAction) {
 			stdin.on('data', function (key) {
-				console.log(_Keys.get(key));
 				executeAction(_Keys.get(key));
 			});
 		}

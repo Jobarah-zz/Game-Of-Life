@@ -26,47 +26,37 @@ var Game = function () {
 		value: function setGameCommands() {
 			var _this = this;
 
-			_GameAction.set('printHelloWorld', function () {
-				return 'Hello World';
+			_GameAction.set('EXIT', function () {
+				process.exit();
 			});
 			_GameAction.set('TOGGLE_LIFE', function () {
 				_this._Cells[posy][posx].toggleIsAlive();
 			});
-			_GameAction.set('PAUSE', function () {
-				//todo here
-			});
-			_GameAction.set('PLAY', function () {
+			_GameAction.set('TOGGLE_PLAY', function () {
 				//todo here
 			});
 			_GameAction.set('UP', function () {
-				console.log('y is : ' + posy);
 				if (posy < _this._Cells.length - 1) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posy += 1;
-					console.log(_this._Cells[posx][posy]);
 					_this._Cells[posy][posx].toggleIsSelected();
 				}
 			});
 			_GameAction.set('DOWN', function () {
-				console.log('y is : ' + posy);
 				if (posy > 0) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posy -= 1;
-					console.log(_this._Cells[posx][posy]);
 					_this._Cells[posy][posx].toggleIsSelected();
 				}
 			});
 			_GameAction.set('RIGHT', function () {
-				console.log('x is : ' + posx);
 				if (posx > 0) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posx -= 1;
-					console.log(_this._Cells[posx][posy]);
 					_this._Cells[posy][posx].toggleIsSelected();
 				}
 			});
 			_GameAction.set('LEFT', function () {
-				console.log('x is : ' + posx);
 				if (posx < _this._Cells.length - 1) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posx += 1;

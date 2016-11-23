@@ -1,1 +1,0 @@
-{"version":3,"sources":["Board.js"],"names":["Board","Cells","_Cells","module","exports"],"mappings":"AAAC;;;;;;IAEKA;;;;;;;uBACAC,OAAO;AACX,QAAKC,MAAL,GAAcD,KAAd;AACA;;;;;;AAGFE,OAAOC,OAAP,GAAiBJ,KAAjB","file":"Board.js","sourcesContent":[" 'use strict';\n\nclass Board {\n\tinit(Cells) {\n\t\tthis._Cells = Cells;\n\t}\n}\n\nmodule.exports = Board;"]}
