@@ -44,12 +44,4 @@ describe('#cellsIterator()', function() {
       assert.equal(JSON.stringify(expectedValue), JSON.stringify(result));
     });
   });
-
-  describe('#executeMain()', function() {
-    it('Should run the game', function() {
-    	let main = new Main();
-    	main.runGame();
-      assert.equal(true, true);
-    });
-  });
 });

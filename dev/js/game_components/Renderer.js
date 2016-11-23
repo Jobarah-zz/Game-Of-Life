@@ -3,8 +3,7 @@
  let color_Code = new Map();
 
 class Renderer {
-	init(Board) {
-		this.Board = Board;
+	init() {
 		this.setColors();
 	}
 
@@ -46,10 +45,10 @@ class Renderer {
  		this.log('\n');
 	}
 
-	printBoard() {
+	printBoard(Board) {
 		this.reset_console();
- 		for (var i = this.Board._Cells.length - 1; i >= 0; i--) {
- 			let row = this.Board._Cells[i];
+ 		for (var i = Board._Cells.length - 1; i >= 0; i--) {
+ 			let row = Board._Cells[i];
 			this.printRow(row);
  		}	
 	}
