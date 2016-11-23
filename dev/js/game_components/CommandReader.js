@@ -1,12 +1,8 @@
 'use strict';
-const ansi = require('ansi')
-  , cursor = ansi(process.stdout);
-
 const stdin = process.stdin;
 
 stdin.setEncoding('utf8');
 stdin.setRawMode(true);
-let posx = 1, posy = 0;
 
 const _Keys = new Map();
 _Keys.set('\u001B\u005B\u0041', 'UP');

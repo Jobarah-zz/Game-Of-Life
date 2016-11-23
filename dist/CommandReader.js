@@ -4,15 +4,10 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ansi = require('ansi'),
-    cursor = ansi(process.stdout);
-
 var stdin = process.stdin;
 
 stdin.setEncoding('utf8');
 stdin.setRawMode(true);
-var posx = 1,
-    posy = 0;
 
 var _Keys = new Map();
 _Keys.set('\x1B[A', 'UP');
