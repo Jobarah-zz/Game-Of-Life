@@ -97,6 +97,7 @@ var Game = function () {
 		value: function logic() {
 			var _this2 = this;
 
+			this._Renderer.printBoard(this._Board);
 			this._CommandReader.getKeyboardInput(function (action) {
 				_this2.executeAction(action);
 				_this2._Renderer.printBoard(_this2._Board);
