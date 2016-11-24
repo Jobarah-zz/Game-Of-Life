@@ -9,7 +9,14 @@ var ansi = require('ansi'),
 var posx = 0,
     posy = 0;
 
-var _GameAction = new Map();
+var _GameCommands = new Map();
+
+var GameState = { PLAY: false };
+
+var _GameRules = new Map();
+_GameRules.set('FEWER_THAN_TWO', function () {
+	process.exit();
+});
 
 var Game = function () {
 	function Game(Board, Renderer, Cells, CommandReader) {
@@ -26,37 +33,44 @@ var Game = function () {
 		value: function setGameCommands() {
 			var _this = this;
 
-			_GameAction.set('EXIT', function () {
+			_GameCommands.set('EXIT', function () {
 				process.exit();
 			});
-			_GameAction.set('TOGGLE_LIFE', function () {
+			_GameCommands.set('TOGGLE_LIFE', function () {
 				_this._Cells[posy][posx].toggleIsAlive();
 			});
-			_GameAction.set('TOGGLE_PLAY', function () {
-				//todo here
+			_GameCommands.set('TOGGLE_PLAY', function () {
+				if (!GameState.PLAY) {
+					_this.play(_this._Cells);
+					GameState.PLAY = true;
+				} else GameState.PLAY = false;
 			});
-			_GameAction.set('UP', function () {
+			_GameCommands.set('UP', function () {
+				console.log('y: ' + posy);
 				if (posy < _this._Cells.length - 1) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posy += 1;
 					_this._Cells[posy][posx].toggleIsSelected();
 				}
 			});
-			_GameAction.set('DOWN', function () {
+			_GameCommands.set('DOWN', function () {
+				console.log('y: ' + posy);
 				if (posy > 0) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posy -= 1;
 					_this._Cells[posy][posx].toggleIsSelected();
 				}
 			});
-			_GameAction.set('RIGHT', function () {
+			_GameCommands.set('RIGHT', function () {
+				console.log('x: ' + posx);
 				if (posx > 0) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posx -= 1;
 					_this._Cells[posy][posx].toggleIsSelected();
 				}
 			});
-			_GameAction.set('LEFT', function () {
+			_GameCommands.set('LEFT', function () {
+				console.log('x: ' + posx);
 				if (posx < _this._Cells.length - 1) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posx += 1;
@@ -80,7 +94,12 @@ var Game = function () {
 	}, {
 		key: 'executeAction',
 		value: function executeAction(action) {
-			_GameAction.get(action)();
+			_GameCommands.get(action)();
+		}
+	}, {
+		key: 'play',
+		value: function play(_Cells) {
+			console.log(this.getCellNeighboursCount(0, 0, _Cells));
 		}
 	}, {
 		key: 'logic',
@@ -94,16 +113,118 @@ var Game = function () {
 			});
 		}
 	}, {
-		key: 'cellsIterator',
-		value: function cellsIterator(array) {
+		key: 'getCellNeighboursCount',
+		value: function getCellNeighboursCount(positionX, positionY, _Cells) {
+			var counter = 0;
+			var leftOrigin = positionX + 1;
+			var rightOrigin = positionX - 1;
+			var upOrigin = positionY + 1;
+			var downOrigin = positionY - 1;
 
-			var nextIndex = 0;
-			return {
-				next: function next() {
-					return nextIndex < array.length ? { value: array[nextIndex++], done: false } : { done: true };
-				}
-			};
+			//left evaluation
+			for (var i = leftOrigin; i < _Cells.length - 1; i++) {
+				if (_Cells[positionY][i].isAlive) counter++;else break;
+			}
+			//lefy diagonally up
+			for (var i = upOrigin; i < _Cells.length - 1; i++) {
+				if (_Cells[i][i].isAlive) counter++;else break;
+			}
+			//down
+			for (var i = downOrigin; i >= 0; i--) {
+				if (_Cells[i][positionX].isAlive) counter++;else break;
+			}
+			//up
+			for (var i = upOrigin; i < _Cells.length - 1; i++) {
+				if (_Cells[i][positionX].isAlive) counter++;else break;
+			}
+			//right		
+			for (var i = rightOrigin; i >= 0; i--) {
+				if (_Cells[positionY][i].isAlive) counter++;else break;
+			}
+			//right	diagonally down
+			for (var i = rightOrigin; i >= 0; i--) {
+				if (_Cells[i][i].isAlive) counter++;else break;
+			}
+
+			var leftUpCounter = { count: 0 };
+			this.getDiagonalLeftDown(0, 0, leftUpCounter, _Cells);
+			console.log('leftUpCounter: ' + (leftUpCounter.count - 1));
+			var leftDownCounter = { count: 0 };
+			this.getDiagonalLeftDown(0, 4, leftDownCounter, _Cells);
+			console.log('leftDownCounter: ' + (leftDownCounter.count - 1));
+			var rightUpCounter = { count: 0 };
+			this.getDiagonalRightUp(4, 0, rightUpCounter, _Cells);
+			console.log('rightUpCounter: ' + (rightUpCounter.count - 1));
+			var rightDownCounter = { count: 0 };
+			this.getDiagonalRightUp(2, 2, rightDownCounter, _Cells);
+			console.log('rightDownCounter: ' + (rightDownCounter.count - 1));
+
+			return counter;
 		}
+	}, {
+		key: 'getDiagonalLeftUp',
+		value: function getDiagonalLeftUp(positionX, positionY, counter, _Cells) {
+			if (_Cells[positionY][positionX].isAlive) {
+				counter.count++;
+			}
+			if (positionY < _Cells.length - 1 && positionX < _Cells.length - 1) {
+				this.getDiagonalLeftDown(positionX + 1, positionY + 1, counter, _Cells);
+			}
+		}
+	}, {
+		key: 'getDiagonalLeftDown',
+		value: function getDiagonalLeftDown(positionX, positionY, counter, _Cells) {
+			if (_Cells[positionY][positionX].isAlive) {
+				counter.count++;
+			}
+			if (positionY > 0 && positionX < _Cells.length - 1) {
+				this.getDiagonalLeftDown(positionX + 1, positionY - 1, counter, _Cells);
+			}
+		}
+	}, {
+		key: 'getDiagonalRightUp',
+		value: function getDiagonalRightUp(positionX, positionY, counter, _Cells) {
+			if (_Cells[positionY][positionX].isAlive) {
+				counter.count++;
+			}
+			if (positionY < _Cells.length - 1 && positionX > 0) {
+				this.getDiagonalRightUp(positionX - 1, positionY + 1, counter, _Cells);
+			}
+		}
+	}, {
+		key: 'getDiagonalRightDown',
+		value: function getDiagonalRightDown(positionX, positionY, counter, _Cells) {
+			if (_Cells[positionY][positionX].isAlive) {
+				counter.count++;
+			}
+			if (positionY < _Cells.length - 1 && positionX < _Cells.length - 1) {
+				this.getDiagonalRightDown(positionX + 1, positionY + 1, counter, _Cells);
+			}
+		}
+
+		// getCellNeighboursRecursively(positionX, positionY, counter, _Cells) {
+		// 	console.log(`positionY: ${positionY} positionX: ${positionX}`);
+		// 	if (_Cells[positionY][positionX].isAlive) {
+		// 		counter.count+=1;
+		// 	}
+		// 	if (positionX-1 >= 0) {
+		// 		//left
+		// 		this.getCellNeighboursRecursively(positionY, positionX-1, counter, _Cells);
+		// 	}
+		// 	if (positionX+1 <= _Cells.length) {
+		// 		//right
+		// 		this.getCellNeighboursRecursively(positionY, positionX+1, counter, _Cells);
+		// 	}
+		// 	if (positionY-1 >=0) {
+		// 		//down
+		// 		this.getCellNeighboursRecursively(positionY-1, positionX, counter, _Cells);
+		// 	}
+		// 	if (positionY+1 <= _Cells.length) {
+		// 		//up
+		// 		this.getCellNeighboursRecursively(positionY+1, positionX, counter, _Cells);
+		// 	}
+		// }
+
 	}]);
 
 	return Game;
