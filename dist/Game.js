@@ -40,13 +40,38 @@ var Game = function () {
 				_this._Cells[posy][posx].toggleIsAlive();
 			});
 			_GameCommands.set('TOGGLE_PLAY', function () {
-				if (!GameState.PLAY) {
-					_this.play(_this._Cells);
-					GameState.PLAY = true;
-				} else GameState.PLAY = false;
+				// if (!GameState.PLAY) {
+				// 	GameState.PLAY = true;
+
+				var cellsArray = _this._Cells;
+				var limit = cellsArray.length - 1;
+
+				for (var i = 0; i < limit; i++) {
+					for (var j = 0; j < limit; j++) {
+						var neighbours = _this.getCellNeighboursCount(j, i, _this._Cells);
+						if (_this._Cells[i][j].isAlive) {
+							console.log('this._Cells[0][0] x: ' + j + ' this._Cells[0][0] y: ' + i + ' neighbours: ' + neighbours + ' isAlive: ' + _this._Cells[i][j].isAlive);
+							if (neighbours < 2) {
+								_this._Cells[i][j].isAlive = false;
+							} else if (neighbours > 3) {
+								_this._Cells[i][j].isAlive = false;
+							}
+						} else {
+							if (neighbours === 3) {
+								_this._Cells[i][j].isAlive = true;
+							}
+						}
+
+						_this._Renderer.printBoard(_this._Board);
+						_this.sleepFor(100);
+					}
+				}
+				// console.log(this._Cells[0][0]);
+
+				// } else
+				// 	GameState.PLAY = false;
 			});
 			_GameCommands.set('UP', function () {
-				console.log('y: ' + posy);
 				if (posy < _this._Cells.length - 1) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posy += 1;
@@ -54,7 +79,6 @@ var Game = function () {
 				}
 			});
 			_GameCommands.set('DOWN', function () {
-				console.log('y: ' + posy);
 				if (posy > 0) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posy -= 1;
@@ -62,7 +86,6 @@ var Game = function () {
 				}
 			});
 			_GameCommands.set('RIGHT', function () {
-				console.log('x: ' + posx);
 				if (posx > 0) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posx -= 1;
@@ -70,7 +93,6 @@ var Game = function () {
 				}
 			});
 			_GameCommands.set('LEFT', function () {
-				console.log('x: ' + posx);
 				if (posx < _this._Cells.length - 1) {
 					_this._Cells[posy][posx].toggleIsSelected();
 					posx += 1;
@@ -97,11 +119,6 @@ var Game = function () {
 			_GameCommands.get(action)();
 		}
 	}, {
-		key: 'play',
-		value: function play(_Cells) {
-			console.log(this.getCellNeighboursCount(0, 0, _Cells));
-		}
-	}, {
 		key: 'logic',
 		value: function logic() {
 			var _this2 = this;
@@ -116,6 +133,7 @@ var Game = function () {
 		key: 'getCellNeighboursCount',
 		value: function getCellNeighboursCount(positionX, positionY, _Cells) {
 			var counter = 0;
+			var neighbourCounterRec = { count: 0 };
 			var leftOrigin = positionX + 1;
 			var rightOrigin = positionX - 1;
 			var upOrigin = positionY + 1;
@@ -124,10 +142,6 @@ var Game = function () {
 			//left evaluation
 			for (var i = leftOrigin; i < _Cells.length - 1; i++) {
 				if (_Cells[positionY][i].isAlive) counter++;else break;
-			}
-			//lefy diagonally up
-			for (var i = upOrigin; i < _Cells.length - 1; i++) {
-				if (_Cells[i][i].isAlive) counter++;else break;
 			}
 			//down
 			for (var i = downOrigin; i >= 0; i--) {
@@ -141,25 +155,43 @@ var Game = function () {
 			for (var i = rightOrigin; i >= 0; i--) {
 				if (_Cells[positionY][i].isAlive) counter++;else break;
 			}
-			//right	diagonally down
-			for (var i = rightOrigin; i >= 0; i--) {
-				if (_Cells[i][i].isAlive) counter++;else break;
+
+			this.getDiagonalNeighbours(positionX, positionY, neighbourCounterRec, _Cells);
+
+			return counter + neighbourCounterRec.count;
+		}
+	}, {
+		key: 'getDiagonalNeighbours',
+		value: function getDiagonalNeighbours(positionX, positionY, counter, _Cells) {
+			var leftOrigin = positionX + 1;
+			var rightOrigin = positionX - 1;
+			var upOrigin = positionY + 1;
+			var downOrigin = positionY - 1;
+
+			var leftDown = { count: 0 };
+			var leftUp = { count: 0 };
+			var rightDown = { count: 0 };
+			var rightUp = { count: 0 };
+
+			if (leftOrigin < _Cells.length - 1) {
+				if (upOrigin < _Cells.length - 1) {
+					this.getDiagonalLeftUp(leftOrigin, upOrigin, leftUp, _Cells);
+				}
+				if (downOrigin >= 0) {
+					this.getDiagonalLeftDown(leftOrigin, downOrigin, leftDown, _Cells);
+				}
 			}
 
-			var leftUpCounter = { count: 0 };
-			this.getDiagonalLeftDown(0, 0, leftUpCounter, _Cells);
-			console.log('leftUpCounter: ' + (leftUpCounter.count - 1));
-			var leftDownCounter = { count: 0 };
-			this.getDiagonalLeftDown(0, 4, leftDownCounter, _Cells);
-			console.log('leftDownCounter: ' + (leftDownCounter.count - 1));
-			var rightUpCounter = { count: 0 };
-			this.getDiagonalRightUp(4, 0, rightUpCounter, _Cells);
-			console.log('rightUpCounter: ' + (rightUpCounter.count - 1));
-			var rightDownCounter = { count: 0 };
-			this.getDiagonalRightUp(2, 2, rightDownCounter, _Cells);
-			console.log('rightDownCounter: ' + (rightDownCounter.count - 1));
-
-			return counter;
+			if (rightOrigin > 0) {
+				if (upOrigin < _Cells.length - 1) {
+					this.getDiagonalRightUp(rightOrigin, upOrigin, rightUp, _Cells);
+				}
+				if (downOrigin >= 0) {
+					this.getDiagonalRightDown(rightOrigin, downOrigin, rightDown, _Cells);
+				}
+			}
+			console.log('leftDown: ' + leftDown.count + ' leftUp: ' + leftUp.count + ' rightDown: ' + rightDown.count + ' rightUp: ' + rightUp.count);
+			counter.count += leftDown.count + leftUp.count + rightDown.count + rightUp.count;
 		}
 	}, {
 		key: 'getDiagonalLeftUp',
@@ -168,7 +200,7 @@ var Game = function () {
 				counter.count++;
 			}
 			if (positionY < _Cells.length - 1 && positionX < _Cells.length - 1) {
-				this.getDiagonalLeftDown(positionX + 1, positionY + 1, counter, _Cells);
+				this.getDiagonalLeftUp(positionX + 1, positionY + 1, counter, _Cells);
 			}
 		}
 	}, {
@@ -197,34 +229,16 @@ var Game = function () {
 			if (_Cells[positionY][positionX].isAlive) {
 				counter.count++;
 			}
-			if (positionY < _Cells.length - 1 && positionX < _Cells.length - 1) {
-				this.getDiagonalRightDown(positionX + 1, positionY + 1, counter, _Cells);
+			if (positionY > 0 && positionX > 0) {
+				this.getDiagonalRightDown(positionX - 1, positionY - 1, counter, _Cells);
 			}
 		}
-
-		// getCellNeighboursRecursively(positionX, positionY, counter, _Cells) {
-		// 	console.log(`positionY: ${positionY} positionX: ${positionX}`);
-		// 	if (_Cells[positionY][positionX].isAlive) {
-		// 		counter.count+=1;
-		// 	}
-		// 	if (positionX-1 >= 0) {
-		// 		//left
-		// 		this.getCellNeighboursRecursively(positionY, positionX-1, counter, _Cells);
-		// 	}
-		// 	if (positionX+1 <= _Cells.length) {
-		// 		//right
-		// 		this.getCellNeighboursRecursively(positionY, positionX+1, counter, _Cells);
-		// 	}
-		// 	if (positionY-1 >=0) {
-		// 		//down
-		// 		this.getCellNeighboursRecursively(positionY-1, positionX, counter, _Cells);
-		// 	}
-		// 	if (positionY+1 <= _Cells.length) {
-		// 		//up
-		// 		this.getCellNeighboursRecursively(positionY+1, positionX, counter, _Cells);
-		// 	}
-		// }
-
+	}, {
+		key: 'sleepFor',
+		value: function sleepFor(sleepDuration) {
+			var now = new Date().getTime();
+			while (new Date().getTime() < now + sleepDuration) {/* do nothing */}
+		}
 	}]);
 
 	return Game;

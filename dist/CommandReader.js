@@ -29,7 +29,6 @@ var CommandReader = function () {
 		value: function getKeyboardInput(executeAction) {
 			stdin.on('data', function (key) {
 				executeAction(_Keys.get(key));
-				console.log(_Keys.get(key));
 			});
 		}
 	}]);
