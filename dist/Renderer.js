@@ -46,10 +46,10 @@ var Renderer = function () {
 		key: 'printCell',
 		value: function printCell(cell) {
 			var _cell = '\u2022 ';
-			if (cell.isAlive) {
-				if (cell._isSelected) {
-					this.log(_cell.underline.red);
-				} else this.log(this.getRandomColor()(_cell));
+			if (cell.isAlive && cell._isSelected) {
+				this.log(_cell.underline.red);
+			} else if (cell.isAlive) {
+				this.log(this.getRandomColor()(_cell));
 			} else if (cell._isSelected) this.log(colors.inverse(_cell));else this.log(colors.gray(_cell));
 		}
 	}, {
