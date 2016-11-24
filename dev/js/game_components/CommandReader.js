@@ -18,7 +18,6 @@ class CommandReader {
 	getKeyboardInput(executeAction) {
 		stdin.on('data', function(key){
 			executeAction(_Keys.get(key));
-			console.log(_Keys.get(key));
 		});
 	}
 }

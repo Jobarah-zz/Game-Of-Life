@@ -19,6 +19,7 @@ class Game {
 		this._Cells = Cells;
 		this._CommandReader = CommandReader;
 	}
+
 	setGameCommands() {
 		_GameCommands.set('EXIT', () => {
 			process.exit();
@@ -27,14 +28,39 @@ class Game {
 			this._Cells[posy][posx].toggleIsAlive();
 		});
 		_GameCommands.set('TOGGLE_PLAY', () => {
-			if (!GameState.PLAY) {
-				this.play(this._Cells);
-				GameState.PLAY = true;
-			} else
-				GameState.PLAY = false;
+			// if (!GameState.PLAY) {
+			// 	GameState.PLAY = true;
+
+			let cellsArray = this._Cells;
+			let limit = cellsArray.length-1;
+
+			for (var i = 0; i < limit; i++) {
+				for (var j = 0; j < limit; j++) {
+					let neighbours = this.getCellNeighboursCount(j, i, this._Cells);
+					if (this._Cells[i][j].isAlive) {
+						console.log(`this._Cells[0][0] x: ${j} this._Cells[0][0] y: ${i} neighbours: ${neighbours} isAlive: ${this._Cells[i][j].isAlive}`);
+						if (neighbours < 2) {
+							this._Cells[i][j].isAlive = false;
+						}
+						else if (neighbours > 3) {
+							this._Cells[i][j].isAlive = false;
+						}	
+					} else {
+						if (neighbours === 3) {
+							this._Cells[i][j].isAlive = true;
+						}
+					}					
+
+					this._Renderer.printBoard(this._Board);
+					this.sleepFor(100);
+				}
+			}		
+			// console.log(this._Cells[0][0]);
+
+			// } else
+			// 	GameState.PLAY = false;
 		});
 		_GameCommands.set('UP', () => {
-			console.log(`y: ${posy}`);
 			if(posy < this._Cells.length-1) {
 				this._Cells[posy][posx].toggleIsSelected();
 				posy+=1;
@@ -42,7 +68,6 @@ class Game {
 			}
 		});
 		_GameCommands.set('DOWN', () => {
-			console.log(`y: ${posy}`);
 			if (posy > 0) {
 				this._Cells[posy][posx].toggleIsSelected();
 				posy-=1;
@@ -50,7 +75,6 @@ class Game {
 			}
 		});
 		_GameCommands.set('RIGHT', () => {
-			console.log(`x: ${posx}`);
 			if (posx > 0) {
 				this._Cells[posy][posx].toggleIsSelected();
 				posx-=1;
@@ -58,7 +82,6 @@ class Game {
 			}
 		});
 		_GameCommands.set('LEFT', () => {
-			console.log(`x: ${posx}`);
 			if (posx < this._Cells.length-1) {
 				this._Cells[posy][posx].toggleIsSelected();
 				posx+=1;
@@ -80,9 +103,6 @@ class Game {
 	executeAction (action) {
 		_GameCommands.get(action)();
 	}
-	play(_Cells) {
-		console.log(this.getCellNeighboursCount(0, 0, _Cells));
-	}
 
 	logic() {
 		this._Renderer.printBoard(this._Board);
@@ -94,21 +114,15 @@ class Game {
 
 	getCellNeighboursCount(positionX, positionY, _Cells) {
 		let counter = 0;
-		let leftOrigin = positionX +1;
-		let rightOrigin = positionX -1;
-		let upOrigin = positionY +1;
-		let downOrigin = positionY -1;
+		let neighbourCounterRec = {count: 0};
+		let leftOrigin = positionX + 1;
+		let rightOrigin = positionX - 1;
+		let upOrigin = positionY + 1;
+		let downOrigin = positionY - 1;
 
 		//left evaluation
 		for (var i = leftOrigin; i < _Cells.length-1; i++) {
 			if (_Cells[positionY][i].isAlive)
-				counter++;
-			else
-				break;
-		}
-		//lefy diagonally up
-		for (var i = upOrigin; i < _Cells.length-1; i++) {
-			if (_Cells[i][i].isAlive)
 				counter++;
 			else
 				break;
@@ -134,29 +148,42 @@ class Game {
 			else
 				break;
 		}		
-		//right	diagonally down
-		for (var i = rightOrigin; i >= 0; i--) {
-			if (_Cells[i][i].isAlive)
-				counter++;
-			else
-				break;
+
+		this.getDiagonalNeighbours(positionX, positionY, neighbourCounterRec, _Cells);
+
+		return counter+neighbourCounterRec.count;
+	}
+
+	getDiagonalNeighbours(positionX, positionY, counter , _Cells) {
+		let leftOrigin = positionX + 1;
+		let rightOrigin = positionX - 1;
+		let upOrigin = positionY + 1;
+		let downOrigin = positionY - 1;
+
+		let leftDown = {count: 0};
+		let leftUp = {count: 0};
+		let rightDown = {count: 0};
+		let rightUp = {count: 0};
+
+		if (leftOrigin < _Cells.length-1) {
+			if (upOrigin < _Cells.length-1) {
+				this.getDiagonalLeftUp(leftOrigin, upOrigin, leftUp, _Cells);
+			}
+			if (downOrigin >= 0) {
+				this.getDiagonalLeftDown(leftOrigin, downOrigin, leftDown, _Cells);
+			}
 		}
 
-		
-		let leftUpCounter = {count: 0};
-		this.getDiagonalLeftUp(0,0, leftUpCounter, _Cells);
-		console.log(`leftUpCounter: ${leftUpCounter.count-1}`);
-		let leftDownCounter = {count: 0};
-		this.getDiagonalLeftDown(0,4, leftDownCounter, _Cells);
-		console.log(`leftDownCounter: ${leftDownCounter.count-1}`);
-		let rightUpCounter = {count: 0};
-		this.getDiagonalRightUp(4,0, rightUpCounter, _Cells);
-		console.log(`rightUpCounter: ${rightUpCounter.count-1}`);
-		let rightDownCounter = {count: 0};
-		this.getDiagonalRightUp(2, 2, rightDownCounter, _Cells);
-		console.log(`rightDownCounter: ${rightDownCounter.count-1}`);
-
-		return counter;
+		if (rightOrigin >= 0) {
+			if (upOrigin < _Cells.length-1) {
+				this.getDiagonalRightUp(rightOrigin, upOrigin, rightUp, _Cells);
+			}
+			if (downOrigin >= 0) {
+				this.getDiagonalRightDown(rightOrigin, downOrigin, rightDown, _Cells);
+			}
+		}
+		console.log(`leftDown: ${leftDown.count} leftUp: ${leftUp.count} rightDown: ${rightDown.count} rightUp: ${rightUp.count}`);
+		counter.count += (leftDown.count + leftUp.count + rightDown.count + rightUp.count);
 	}
 
 	getDiagonalLeftUp(positionX, positionY, counter , _Cells) {
@@ -190,34 +217,15 @@ class Game {
 		if (_Cells[positionY][positionX].isAlive) {
 			counter.count++;
 		}
-		if (positionY < _Cells.length-1 && positionX < _Cells.length-1) {
-			this.getDiagonalRightDown(positionX+1, positionY+1, counter, _Cells);
+		if (positionY > 0 && positionX > 0) {
+			this.getDiagonalRightDown(positionX-1, positionY-1, counter, _Cells);
 		}
 	}
 
-	// getCellNeighboursRecursively(positionX, positionY, counter, _Cells) {
-	// 	console.log(`positionY: ${positionY} positionX: ${positionX}`);
-	// 	if (_Cells[positionY][positionX].isAlive) {
-	// 		counter.count+=1;
-	// 	}
-	// 	if (positionX-1 >= 0) {
-	// 		//left
-	// 		this.getCellNeighboursRecursively(positionY, positionX-1, counter, _Cells);
-	// 	}
-	// 	if (positionX+1 <= _Cells.length) {
-	// 		//right
-	// 		this.getCellNeighboursRecursively(positionY, positionX+1, counter, _Cells);
-	// 	}
-	// 	if (positionY-1 >=0) {
-	// 		//down
-	// 		this.getCellNeighboursRecursively(positionY-1, positionX, counter, _Cells);
-	// 	}
-	// 	if (positionY+1 <= _Cells.length) {
-	// 		//up
-	// 		this.getCellNeighboursRecursively(positionY+1, positionX, counter, _Cells);
-	// 	}
-	// }
-
+	sleepFor( sleepDuration ){
+	    let now = new Date().getTime();
+	    while(new Date().getTime() < now + sleepDuration){ /* do nothing */ } 
+	}
 };
 
 module.exports = Game;

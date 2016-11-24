@@ -182,7 +182,7 @@ var Game = function () {
 				}
 			}
 
-			if (rightOrigin > 0) {
+			if (rightOrigin >= 0) {
 				if (upOrigin < _Cells.length - 1) {
 					this.getDiagonalRightUp(rightOrigin, upOrigin, rightUp, _Cells);
 				}
