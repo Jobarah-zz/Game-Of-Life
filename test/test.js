@@ -22,26 +22,4 @@ describe('Game', function () {
       assert.equal(expectedValue, game.executeAction('printHelloWorld'));
     });
   });
-
-describe('#cellsIterator()', function() {
-    it('Should iterate through array of objects sent', function() {
-    	let expectedValue = ['yo', 'ya'];
-	 	var Cells = new Array();
- 		for (var i = 10; i >= 0; i--) {
- 			Cells.push(new Cell());
- 		}
-    	let game = new Game(new Board(), new Renderer(), Cells);
-    	game.init();
-    	let it = game.cellsIterator(['yo', 'ya']);
-    	let result = new Array();
-		let currentItem = it.next();
-
-		while (!currentItem.done) {
-			result.push(currentItem.value);
-			currentItem = it.next();
-		}
-
-      assert.equal(JSON.stringify(expectedValue), JSON.stringify(result));
-    });
-  });
 });
