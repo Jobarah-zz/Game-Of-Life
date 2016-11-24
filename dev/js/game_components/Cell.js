@@ -14,7 +14,7 @@ class Cell {
 		else
 			this.isAlive = true;
 	}
-	
+
 	toggleIsSelected() {
 		if (this._isSelected) 
 			this._isSelected = false;
