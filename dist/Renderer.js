@@ -59,7 +59,7 @@ var Renderer = function () {
 	}, {
 		key: 'printBoard',
 		value: function printBoard(Board) {
-			//this.reset_console();
+			this.reset_console();
 			for (var i = Board._Cells.length - 1; i >= 0; i--) {
 				var row = Board._Cells[i];
 				this.printRow(row);

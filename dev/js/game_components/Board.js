@@ -1,7 +1,7 @@
  'use strict';
 
 class Board {
-	init(Cells) {
+	constructor(Cells) {
 		this._Cells = Cells;
 	}
 }

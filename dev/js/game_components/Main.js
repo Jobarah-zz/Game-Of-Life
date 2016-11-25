@@ -6,6 +6,6 @@
  let Renderer = require('./Renderer');
  let CommandReader = require('./CommandReader');
 
- let game = new Game(new Board(), new Renderer(), new CellsGrid(20), new CommandReader());
+ let game = new Game(new Board(new CellsGrid(20)), new Renderer(), new CommandReader());
  game.init();
  game.logic();
