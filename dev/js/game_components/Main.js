@@ -2,10 +2,10 @@
 
  let Game = require('./Game');
  let Board = require('./Board');
- let CellsGrid = require('./CellsGrid');
+ let CellsGridGenerator = require('./CellsGridGenerator');
  let Renderer = require('./Renderer');
  let CommandReader = require('./CommandReader');
 
- let game = new Game(new Board(new CellsGrid(20)), new Renderer(), new CommandReader());
+ let game = new Game(new Board(new CellsGridGenerator().generateGrid(20)), new Renderer(), new CommandReader());
  game.init();
  game.logic();

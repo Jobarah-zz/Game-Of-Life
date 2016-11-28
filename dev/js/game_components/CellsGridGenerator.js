@@ -2,8 +2,9 @@
 
 let Cell = require('./Cell');
 
-class CellsGrid {
-	constructor(Dimensions) {
+class CellsGridGenerator {
+	
+	generateGrid(Dimensions) {
  		let Cells = {cellsArray: new Array()};
  		this.fillRows(Cells, Dimensions);
  		return Cells.cellsArray;
@@ -24,4 +25,4 @@ class CellsGrid {
 	}
 }
 
- module.exports = CellsGrid;
+ module.exports = CellsGridGenerator;
