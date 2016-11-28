@@ -5,7 +5,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Cell = function () {
-	function Cell(isAlive, positonX, positonY, isSelected) {
+	function Cell(isAlive, isSelected) {
 		_classCallCheck(this, Cell);
 
 		this.isAlive = isAlive || false;
