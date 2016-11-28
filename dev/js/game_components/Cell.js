@@ -1,7 +1,7 @@
  'use strict';
  
 class Cell {
-	constructor(isAlive, positonX, positonY, isSelected) {
+	constructor(isAlive, isSelected) {
 		this.isAlive = isAlive || false;
 		this._isSelected = isSelected || false;
 	}
